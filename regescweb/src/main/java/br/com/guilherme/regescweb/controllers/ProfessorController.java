@@ -1,7 +1,7 @@
 package br.com.guilherme.regescweb.controllers;
 
 
-import br.com.guilherme.regescweb.dto.RequisicaoNovoProfessor;
+import br.com.guilherme.regescweb.dto.RequisicaoFormProfessor;
 import br.com.guilherme.regescweb.models.Professor;
 import br.com.guilherme.regescweb.models.StatusProfessor;
 import br.com.guilherme.regescweb.repositories.ProfessorRepository;
@@ -12,6 +12,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 
@@ -19,13 +20,14 @@ import java.util.List;
 import java.util.Optional;
 
 @Controller
+@RequestMapping("/professores")
 public class ProfessorController {
 
     @Autowired      // Identifica que é uma dependência e, automaticamente, vai injetá-la (sem precisar do construtor)
     private ProfessorRepository professorRepository;
 
 
-    @GetMapping("/professores")
+    @GetMapping("")
     public ModelAndView index() {
 
         List<Professor> professores = this.professorRepository.findAll();
@@ -37,8 +39,8 @@ public class ProfessorController {
     }
 
 
-    @GetMapping("/professores/new")
-    public ModelAndView newProfessor(RequisicaoNovoProfessor requisicao) {      // Esse parâmetro é necessário para explicitar que essa action está atrelada ao forms
+    @GetMapping("/new")
+    public ModelAndView newProfessor(RequisicaoFormProfessor requisicao) {      // Esse parâmetro é necessário para explicitar que essa action está atrelada ao forms
 
         ModelAndView mv = new ModelAndView("/professores/new");
         mv.addObject("statusProfessor", StatusProfessor.values());
@@ -48,10 +50,10 @@ public class ProfessorController {
 
 
     // Quando submetemos o formulário, ele manda uma requisição pelo verbo POST acionando essa action
-    @PostMapping("/professores")
+    @PostMapping("")
     // Spring automaticamente "seta" os valores dos campos do form para os atributos do objeto requisicao
     // @Valid indica que "requisicao" deve ser válido e, bindingResult será o resultado dessa validação
-    public ModelAndView create(@Valid RequisicaoNovoProfessor requisicao, BindingResult bindingResult) {
+    public ModelAndView create(@Valid RequisicaoFormProfessor requisicao, BindingResult bindingResult) {
 
         // Verificamos a validação
         if (bindingResult.hasErrors()) {
@@ -70,7 +72,7 @@ public class ProfessorController {
     }
 
 
-    @GetMapping("/professores/{id}")    // Mapeamento dos professores associando o seu "id"
+    @GetMapping("/{id}")    // Mapeamento dos professores associando o seu "id"
     public ModelAndView show(@PathVariable Long id) {       // @PathVariable indica que o parâmetro recebido deve vir da URL
 
         // Verifica se o professor com o id passado existe
@@ -81,6 +83,26 @@ public class ProfessorController {
 
             ModelAndView mv = new ModelAndView("professores/show");
             mv.addObject("professor", professor);       // Passamos um objeto da entidade Professor para a view professores/show.html
+
+            return mv;
+        } else {
+            return new ModelAndView("redirect:/professores");
+        }
+    }
+
+
+    @GetMapping("/{id}/edit")
+    public ModelAndView edit(@PathVariable Long id, RequisicaoFormProfessor requisicao) {
+
+        Optional<Professor> optionalProfessor = this.professorRepository.findById(id);
+
+        if (optionalProfessor.isPresent()) {
+            Professor professor = optionalProfessor.get();
+            requisicao.fromProfessor(professor);        // Converte a entidade Professor para a classe DTO
+
+            ModelAndView mv = new ModelAndView("professores/edit");
+            mv.addObject("statusProfessor", StatusProfessor.values());      // Passa os valores possíveis para o campo de status
+            mv.addObject("professorId", id);
 
             return mv;
         } else {
