@@ -10,16 +10,18 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.servlet.ModelAndView;
 
 
 import java.util.List;
+import java.util.Optional;
 
 @Controller
 public class ProfessorController {
 
-    @Autowired      // Identifica que é uma dependência e, automaticamente, vai injeta-la (sem precisar do construtor)
+    @Autowired      // Identifica que é uma dependência e, automaticamente, vai injetá-la (sem precisar do construtor)
     private ProfessorRepository professorRepository;
 
 
@@ -63,6 +65,25 @@ public class ProfessorController {
             Professor professor = requisicao.toProfessor();
             this.professorRepository.save(professor);
 
+            return new ModelAndView("redirect:/professores/" + professor.getId());
+        }
+    }
+
+
+    @GetMapping("/professores/{id}")    // Mapeamento dos professores associando o seu "id"
+    public ModelAndView show(@PathVariable Long id) {       // @PathVariable indica que o parâmetro recebido deve vir da URL
+
+        // Verifica se o professor com o id passado existe
+        Optional<Professor> optionalProfessor = this.professorRepository.findById(id);
+
+        if (optionalProfessor.isPresent()) {
+            Professor professor = optionalProfessor.get();
+
+            ModelAndView mv = new ModelAndView("professores/show");
+            mv.addObject("professor", professor);       // Passamos um objeto da entidade Professor para a view professores/show.html
+
+            return mv;
+        } else {
             return new ModelAndView("redirect:/professores");
         }
     }

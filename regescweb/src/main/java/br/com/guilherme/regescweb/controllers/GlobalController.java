@@ -4,11 +4,12 @@ import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
-@ControllerAdvice
+@ControllerAdvice       // Serve para tratar exceções em todos os controllers da aplicação
 public class GlobalController {
 
-    @ModelAttribute("servletPath")
+    @ModelAttribute("servletPath")      // Registra esse atributo para todos os controllers da aplicação
     public String getRequestServletPath(HttpServletRequest request) {
-        return request.getServletPath();
+
+        return request.getServletPath();    // Alternativa para o request.getRequestURI()
     }
 }
