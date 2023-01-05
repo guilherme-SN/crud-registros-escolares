@@ -47,6 +47,17 @@ public class RequisicaoFormProfessor {      // É quem precisa ser validada, poi
         return new Professor(this.nome, this.salario, this.statusProfessor);
     }
 
+
+    // Função para converter a classe DTO para Entidade a partir de um professor válido
+    public Professor toProfessor(Professor professor) {
+        professor.setNome(this.nome);
+        professor.setSalario(this.salario);
+        professor.setStatusProfessor(this.statusProfessor);
+
+        return professor;
+    }
+
+
     // Função para converter a Entidade Professor para a classe DTO
     public void fromProfessor(Professor professor) {
         this.setNome(professor.getNome());
