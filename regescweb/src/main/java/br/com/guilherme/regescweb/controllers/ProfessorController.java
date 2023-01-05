@@ -130,4 +130,18 @@ public class ProfessorController {
             }
         }
     }
+
+
+    @GetMapping("/{id}/delete")
+    public String delete(@PathVariable Long id) {
+        try {
+            this.professorRepository.deleteById(id);
+
+            return "redirect:/professores";
+        } catch (Exception e) {
+            System.out.println(e.getMessage());
+
+            return "redirect:/professores";
+        }
+    }
 }
