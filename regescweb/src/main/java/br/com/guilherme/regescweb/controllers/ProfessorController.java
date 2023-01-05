@@ -83,7 +83,7 @@ public class ProfessorController {
 
             return mv;
         } else {
-            return new ModelAndView("redirect:/professores");
+            return this.retornaErroProfessor("SHOW ERROR: Professor #" + id + " não foi encontrado!");
         }
     }
 
@@ -103,13 +103,14 @@ public class ProfessorController {
 
             return mv;
         } else {
-            return new ModelAndView("redirect:/professores");
+            return this.retornaErroProfessor("EDIT ERROR: Professor #" + id + " não foi encontrado!");
         }
     }
 
 
     @PatchMapping("/{id}")
     public ModelAndView update(@PathVariable Long id, @Valid RequisicaoFormProfessor requisicao, BindingResult bindingResult) {
+
         if (bindingResult.hasErrors()) {
             ModelAndView mv = new ModelAndView("professores/edit");
             mv.addObject("professorId", id);
@@ -120,28 +121,62 @@ public class ProfessorController {
             Optional<Professor> optionalProfessor = this.professorRepository.findById(id);
 
             if (optionalProfessor.isPresent()) {
+                ModelAndView mv = new ModelAndView("redirect:/professores/" + id);
                 Professor professor = requisicao.toProfessor(optionalProfessor.get());
 
                 this.professorRepository.save(professor);
 
-                return new ModelAndView("redirect:/professores/" + id);
+                // Passa os objetos que serão montados na URL pelo Thymeleaf a partir do ${param.<nome>}
+                mv.addObject("message", "Professor #" + id + " atualizado com sucesso!");
+                mv.addObject("error", false);
+
+                return mv;
             } else {
-                return new ModelAndView("redirect:/professores");
+                return this.retornaErroProfessor("UPDATE ERROR: Professor #" + id + " não foi encontrado!");
             }
         }
     }
 
 
     @GetMapping("/{id}/delete")
-    public String delete(@PathVariable Long id) {
+    public ModelAndView delete(@PathVariable Long id) {
+
+        ModelAndView mv = new ModelAndView("redirect:/professores");
+
         try {
             this.professorRepository.deleteById(id);
 
-            return "redirect:/professores";
+            // Passa os objetos que serão montados na URL pelo Thymeleaf a partir do ${param.<nome>}
+            mv.addObject("message", "Professor #" + id + " deletado com sucesso!");
+            mv.addObject("error", false);
         } catch (Exception e) {
             System.out.println(e.getMessage());
 
-            return "redirect:/professores";
+            mv = this.retornaErroProfessor("DELETE ERROR: Professor #" + id + " não encontrado!");
         }
+
+        return mv;
+    }
+
+
+    private ModelAndView retornaErroProfessor(String msg) {
+        ModelAndView mv = new ModelAndView("redirect:/professores");
+
+        // Passa os objetos que serão montados na URL pelo Thymeleaf a partir do ${param.<nome>}
+        mv.addObject("message", msg);
+        mv.addObject("error", true);
+
+        return mv;
+    }
+
+
+    private ModelAndView retornaErroProfessor(String msg, Long id) {
+        ModelAndView mv = new ModelAndView("redirect:/professores/" + id);
+
+        // Passa os objetos que serão montados na URL pelo Thymeleaf a partir do ${param.<nome>}
+        mv.addObject("message", msg);
+        mv.addObject("error", true);
+
+        return mv;
     }
 }

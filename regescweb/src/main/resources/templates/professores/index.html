@@ -6,6 +6,14 @@
 
 <header th:replace="~{fragmentos :: header('Lista de Professores')}"></header>
 
+<div class="container mb-4">
+    <div class="col-12">
+        <span th:styleappend="${(param.message == null || param.error == null) ? 'display:none;' : ''}"
+              th:classappend="${(param.error != null && param.error) ? 'error-message' : 'success-message'}"
+              th:text="${param.message != null ? param.message : ''}">Mensagem</span>
+    </div>
+</div>
+
 <div class="container">
     <div class="row">
         <div class="col-12">
