@@ -1,10 +1,10 @@
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
 
 
-<div class="container" th:fragment="form(requisicaoFormProfessor, action)">
+<div class="container" th:fragment="form(requisicaoFormProfessor, action, method)">
     <div class="row">
         <form th:object="${requisicaoFormProfessor}"
-              th:action="${action}" method="POST">
+              th:action="${action}" th:method="${method}">
             <div class="mb-3">
                 <label class="form-label">Nome</label>
                 <input class="form-control" th:errorclass="is-invalid" type="text" th:field="*{nome}">
