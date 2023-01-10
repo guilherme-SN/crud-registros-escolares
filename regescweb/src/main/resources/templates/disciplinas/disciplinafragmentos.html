@@ -1,0 +1,32 @@
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+
+<div class="container" th:fragment="form(requisicaoFormDisciplina, action, method)">
+    <div class="row">
+        <form th:object="${requisicaoFormDisciplina}"
+              th:action="${action}" th:method="${method}">
+            <div class="mb-3">
+                <label class="form-label">Nome</label>
+                <input class="form-control" th:errorclass="is-invalid" type="text" th:field="*{nome}">
+                <div class="invalid-feedback" th:errors="*{nome}"></div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Semestre</label>
+                <input class="form-control" th:errorclass="is-invalid" type="text" th:field="*{semestre}">
+                <div class="invalid-feedback" th:errors="*{semestre}"></div>
+            </div>
+            <div class="mb-3">
+                <label class="form-label">Professor</label>
+                <select class="form-select" th:field="*{professorId}" required>
+                    <option value="">Professores</option>
+                    <option th:each="professor : ${professores}"
+                            th:value="${professor.id}"
+                            th:text="${professor.nome}"></option>
+                </select>
+            </div>
+            <button class="btn btn-primary" type="submit">Submit</button>
+            <a href="javascript:history.back()">Voltar</a>
+
+        </form>
+    </div>
+</div>

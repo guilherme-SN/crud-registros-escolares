@@ -3,6 +3,7 @@ package br.com.guilherme.regescweb.models;
 import jakarta.persistence.*;
 
 import java.math.BigDecimal;
+import java.util.Set;
 
 @Entity
 public class Professor {
@@ -14,6 +15,9 @@ public class Professor {
     private BigDecimal salario;
     @Enumerated(EnumType.STRING)    // Explicita que é um Enum e trata as constantes como String
     private StatusProfessor statusProfessor;
+
+    @OneToMany(mappedBy = "professor", fetch = FetchType.EAGER)
+    private Set<Disciplina> disciplinas;
 
     @Deprecated
     public Professor() { }
@@ -54,5 +58,21 @@ public class Professor {
 
     public void setStatusProfessor(StatusProfessor statusProfessor) {
         this.statusProfessor = statusProfessor;
+    }
+
+
+    @PreRemove
+    public void atualizaDisciplinaOnRemove() {
+        for (Disciplina disciplina : this.getDisciplinas()) {
+            disciplina.setProfessor(null);
+        }
+    }
+
+    public Set<Disciplina> getDisciplinas() {
+        return disciplinas;
+    }
+
+    public void setDisciplinas(Set<Disciplina> disciplinas) {
+        this.disciplinas = disciplinas;
     }
 }

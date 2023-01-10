@@ -19,16 +19,23 @@
         <ul class="nav nav-tabs">
             <li class="nav-item">
                 <a aria-current="page" class="nav-link"
-                   th:classappend="${servletPath.equals('/')} ? 'active' : ''"
+                   th:classappend="${servletPath.equals('/') ? 'active' : ''}"
                    href="/">Home</a>
             </li>
             <li class="nav-item">
                 <a class="nav-link"
-                   th:classappend="${servletPath.startsWith('/professores')} ? 'active' : ''"
+                   th:classappend="${servletPath.startsWith('/professores') ? 'active' : ''}"
                    href="/professores">Professores</a>
             </li>
             <li class="nav-item">
-                <a class="nav-link" href="#">Alunos</a>
+                <a class="nav-link"
+                   th:classappend="${servletPath.startsWith('/alunos') ? 'active' : ''}"
+                   href="/alunos">Alunos</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link"
+                   th:classappend="${servletPath.startsWith('/disciplinas') ? 'active' : ''}"
+                   href="/disciplinas">Disciplinas</a>
             </li>
         </ul>
     </div>

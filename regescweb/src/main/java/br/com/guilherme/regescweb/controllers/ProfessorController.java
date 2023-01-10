@@ -20,9 +20,12 @@ import java.util.Optional;
 @RequestMapping("/professores")
 public class ProfessorController {
 
-    @Autowired      // Identifica que é uma dependência e, automaticamente, vai injetá-la (sem precisar do construtor)
-    private ProfessorRepository professorRepository;
+    private final ProfessorRepository professorRepository;
 
+    @Autowired      // Identifica que é uma dependência e, automaticamente, vai injetá-la (sem precisar do construtor)
+    public ProfessorController(ProfessorRepository professorRepository) {
+        this.professorRepository = professorRepository;
+    }
 
     @GetMapping("")
     public ModelAndView index() {
@@ -80,7 +83,7 @@ public class ProfessorController {
 
             ModelAndView mv = new ModelAndView("professores/show");
             mv.addObject("professor", professor);       // Passamos um objeto da entidade Professor para a view professores/show.html
-
+            mv.addObject("disciplinas", professor.getDisciplinas());
             return mv;
         } else {
             return this.retornaErroProfessor("SHOW ERROR: Professor #" + id + " não foi encontrado!");
