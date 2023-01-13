@@ -4,6 +4,7 @@ Curso de Spring MVC do professor Xavecoding
 ## TODO:
 - [ ] Consertar bugs:
 	- Erro ao criar um aluno quando não há nenhuma disciplina no banco de dados
+	- Permitir que apenas professores disponíveis (não demitidos) possam pegar matérias
 - [ ] Otimizar o relacionamento entre as entidades
 	- Fazer com que o nome de cada objeto seja um link para seus detalhes
 	- Tratar quando queremos deletar um professor, mas deixar a disciplina
