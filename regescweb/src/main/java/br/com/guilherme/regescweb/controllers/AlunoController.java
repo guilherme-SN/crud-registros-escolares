@@ -1,18 +1,154 @@
 package br.com.guilherme.regescweb.controllers;
 
 
+import br.com.guilherme.regescweb.dto.RequisicaoFormAluno;
+import br.com.guilherme.regescweb.models.Aluno;
+import br.com.guilherme.regescweb.repositories.AlunoRepository;
+import br.com.guilherme.regescweb.repositories.DisciplinaRepository;
+import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
+
+import java.util.Optional;
 
 @Controller
 @RequestMapping(value = "/alunos")
 public class AlunoController {
 
+    private final AlunoRepository alunoRepository;
+    private final DisciplinaRepository disciplinaRepository;
+
+    @Autowired
+    public AlunoController(AlunoRepository alunoRepository, DisciplinaRepository disciplinaRepository) {
+        this.alunoRepository = alunoRepository;
+        this.disciplinaRepository = disciplinaRepository;
+    }
+
+
     @GetMapping("")
     public ModelAndView index() {
 
-        return new ModelAndView("/alunos/index");
+        ModelAndView mv = new ModelAndView("alunos/index");
+        mv.addObject("alunos", this.alunoRepository.findAll());
+
+        return mv;
+    }
+
+
+    @GetMapping("/new")
+    public ModelAndView newAluno(RequisicaoFormAluno requisicao) {
+
+        ModelAndView mv = new ModelAndView("alunos/new");
+        mv.addObject("disciplinas", this.disciplinaRepository.findAll());
+
+        return mv;
+    }
+
+
+    @PostMapping("")
+    public ModelAndView create(@Valid RequisicaoFormAluno requisicao, BindingResult result) {
+
+        if (result.hasErrors()) {
+            return new ModelAndView("/alunos/new");
+        }
+
+        Aluno aluno = requisicao.toAluno(this.disciplinaRepository);
+
+        this.alunoRepository.save(aluno);
+
+        return new ModelAndView("redirect:/alunos/" + aluno.getId());
+    }
+
+
+    @GetMapping("/{id}")
+    public ModelAndView showAlunos(@PathVariable Long id) {
+
+        Optional<Aluno> optionalAluno = this.alunoRepository.findById(id);
+
+        if (optionalAluno.isPresent()) {
+            ModelAndView mv = new ModelAndView("alunos/show");
+            mv.addObject("aluno", optionalAluno.get());
+
+            return mv;
+        }
+
+        return new ModelAndView("redirect:/alunos");
+    }
+
+
+    @GetMapping("{id}/disciplinas")
+    public ModelAndView showDisciplinas(@PathVariable Long id) {
+
+        Optional<Aluno> optionalAluno = this.alunoRepository.findById(id);
+
+        if (optionalAluno.isPresent()) {
+            Aluno aluno = optionalAluno.get();
+
+            ModelAndView mv = new ModelAndView("alunos/disciplinas");
+            mv.addObject("alunoId", id);
+            mv.addObject("disciplinas", aluno.getDisciplinas());
+
+            return mv;
+        }
+
+        return new ModelAndView("redirect:/alunos");
+    }
+
+    @GetMapping("/{id}/edit")
+    public ModelAndView edit(@PathVariable Long id, RequisicaoFormAluno requisicao) {
+
+        Optional<Aluno> optionalAluno = this.alunoRepository.findById(id);
+
+        if (optionalAluno.isPresent()) {
+            requisicao.fromAluno(optionalAluno.get(), this.disciplinaRepository);
+
+            ModelAndView mv = new ModelAndView("alunos/edit");
+            mv.addObject("alunoId", id);
+            mv.addObject("disciplinas", this.disciplinaRepository.findAll());
+
+            return mv;
+        }
+
+        return new ModelAndView("redirect:/alunos");
+    }
+
+
+    @PatchMapping("/{id}")
+    public ModelAndView update(@PathVariable Long id, RequisicaoFormAluno requisicao, BindingResult result) {
+
+        if (result.hasErrors()) {
+            return new ModelAndView("/alunos/" + id + "/edit");
+        }
+
+        Optional<Aluno> optionalAluno = this.alunoRepository.findById(id);
+
+        if (optionalAluno.isPresent()) {
+            Aluno aluno = requisicao.toAluno(optionalAluno.get(), this.disciplinaRepository);
+
+            this.alunoRepository.save(aluno);
+
+            ModelAndView mv =  new ModelAndView("alunos/show");
+            mv.addObject("aluno", aluno);
+
+            return mv;
+        }
+
+        return new ModelAndView("redirect:/alunos");
+    }
+
+
+    @GetMapping("/{id}/delete")
+    public ModelAndView delete(@PathVariable Long id) {
+
+        try {
+            this.alunoRepository.deleteById(id);
+
+            return new ModelAndView("redirect:/alunos");
+        } catch (Exception e) {
+            return new ModelAndView("redirect:/alunos");
+        }
     }
 }
