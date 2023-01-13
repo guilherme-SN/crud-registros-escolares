@@ -49,7 +49,11 @@ public class DisciplinaController {
     public ModelAndView create(@Valid RequisicaoFormDisciplina requisicao, BindingResult result) {
 
         if (result.hasErrors()) {
-            return this.retornaErroDisciplina("CREATE ERROR: erro ao criar disciplina!");
+            ModelAndView mv = new ModelAndView("/disciplinas/new");
+
+            mv.addObject("professores", this.professorRepository.findAll());
+
+            return mv;
         }
 
         Disciplina disciplina = requisicao.toDisciplina(this.professorRepository);
@@ -61,7 +65,7 @@ public class DisciplinaController {
 
 
     @GetMapping("/{id}")
-    public ModelAndView show(@PathVariable Long id) {
+    public ModelAndView showDisciplinas(@PathVariable Long id) {
 
         ModelAndView mv = new ModelAndView();
         Optional<Disciplina> optionalDisciplina = this.disciplinaRepository.findById(id);
@@ -77,6 +81,23 @@ public class DisciplinaController {
         }
 
         return mv;
+    }
+
+
+    @GetMapping("/{id}/alunos")
+    public ModelAndView showAlunos(@PathVariable Long id) {
+
+        Optional<Disciplina> disciplinaOptional = this.disciplinaRepository.findById(id);
+
+        if (disciplinaOptional.isPresent()) {
+            ModelAndView mv = new ModelAndView("disciplinas/alunos");
+            mv.addObject("alunos", disciplinaOptional.get().getAlunos());
+            mv.addObject("disciplinaId", id);
+
+            return mv;
+        }
+
+        return new ModelAndView("redirect:/disciplinas");
     }
 
 
