@@ -1,12 +1,9 @@
 package br.com.guilherme.regescweb.models;
 
-import br.com.guilherme.regescweb.dto.RequisicaoFormDisciplina;
-import br.com.guilherme.regescweb.repositories.ProfessorRepository;
 import jakarta.persistence.*;
-import jakarta.validation.constraints.NotNull;
-import org.springframework.beans.factory.annotation.Autowired;
 
-import java.util.Optional;
+import java.util.Objects;
+import java.util.Set;
 
 
 @Entity
@@ -22,6 +19,9 @@ public class Disciplina {
     @ManyToOne
     @JoinColumn(name = "professor_id")
     private Professor professor;
+
+    @ManyToMany(mappedBy = "disciplinas", fetch = FetchType.EAGER)
+    private Set<Aluno> alunos;
 
 
     @Deprecated
@@ -60,6 +60,29 @@ public class Disciplina {
 
     public void setProfessor(Professor professor) {
         this.professor = professor;
+    }
+
+    public Set<Aluno> getAlunos() {
+        return alunos;
+    }
+
+    public void setAlunos(Set<Aluno> alunos) {
+        this.alunos = alunos;
+    }
+
+
+    @PreRemove
+    public void removeAlunosOnDelete() {
+
+        for (Aluno aluno : this.getAlunos()) {
+            Set<Disciplina> alunoDisciplinas = aluno.getDisciplinas();
+
+            for (Disciplina disciplina : alunoDisciplinas) {
+                if (Objects.equals(disciplina.getId(), this.getId())) {
+                    alunoDisciplinas.remove(disciplina);
+                }
+            }
+        }
     }
 
     @Override
