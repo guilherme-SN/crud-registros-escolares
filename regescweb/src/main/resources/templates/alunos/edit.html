@@ -1,0 +1,15 @@
+<!DOCTYPE html SYSTEM "http://www.thymeleaf.org/dtd/xhtml1-strict-thymeleaf-spring4-4.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragmentos :: head('Editar Aluno #' + ${alunoId})}"></head>
+
+<body>
+
+<header th:replace="~{fragmentos :: header('Editar Aluno #' + ${alunoId})}"></header>
+
+<main>
+    <div th:replace="~{/alunos/fragmentos :: form(requisicaoFormAluno, '/alunos/' + ${alunoId}, 'PATCH')}"></div>
+</main>
+
+</body>
+</html>

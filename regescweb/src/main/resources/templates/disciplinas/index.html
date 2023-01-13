@@ -38,7 +38,7 @@
                         <td class="col-4" th:text="${disciplina.nome}">NOME</td>
                         <td class="col-2" th:text="${disciplina.semestre}">SEMESTRE</td>
                         <td class="col-2" th:text="${disciplina.professor != null} ? ${disciplina.professor.nome} : 'Sem professor'">PROFESSOR</td>
-                        <td class="col-2">ALUNOS</td>
+                        <td class="col-2"><a th:href="@{/disciplinas/{disciplinaId}/alunos(disciplinaId = ${disciplina.id})}">Alunos</a></td>
                         <td class="col-1"><a th:href="@{/disciplinas/{disciplinaId}(disciplinaId = ${disciplina.id})}">Detalhes</a></td>
                         <td class="col-1"><a th:href="@{/disciplinas/{disciplinaId}/edit(disciplinaId = ${disciplina.id})}">Editar</a></td>
                         <td class="col-1"><a th:href="@{/disciplinas/{disciplinaId}/delete(disciplinaId = ${disciplina.id})}">Deletar</a></td>

@@ -31,21 +31,21 @@
                 </tr>
                 </thead>
                 <tbody>
-<!--                <tr th:each="professor : ${professores}">-->
-<!--                    <th class="col-1" scope="row" th:text="${professor.getId()}">ID</th>-->
-<!--                    <td class="col-4" th:text="${professor.nome}">NOME</td>-->
-<!--                    <td class="col-2" th:text="${professor.salario}">SALÁRIO</td>-->
-<!--                    <td class="col-2" th:text="${professor.statusProfessor.toString()}">ATIVO</td>-->
-<!--                    <td class="col-1"><a th:href="@{/professores/{professorId}(professorId = ${professor.id})}">Detalhes</a></td>-->
-<!--                    <td class="col-1"><a th:href="@{/professores/{professorId}/edit(professorId = ${professor.id})}">Editar</a></td>-->
-<!--                    <td class="col-1"><a th:href="@{/professores/{professorId}/delete(professorId = ${professor.id})}">Deletar</a></td>-->
-<!--                </tr>-->
+                    <tr th:each="aluno : ${alunos}">
+                        <th class="col-1" scope="row" th:text="${aluno.id}">ID</th>
+                        <td class="col-4" th:text="${aluno.nome}">NOME</td>
+                        <td class="col-2" th:text="${aluno.idade}">IDADE</td>
+                        <td class="col-2"><a th:href="@{/alunos/{alunoId}/disciplinas(alunoId = ${aluno.id})}">Disciplinas</a></td>
+                        <td class="col-1"><a th:href="@{/alunos/{alunoId}(alunoId = ${aluno.id})}">Detalhes</a></td>
+                        <td class="col-1"><a th:href="@{/alunos/{alunoId}/edit(alunoId = ${aluno.id})}">Editar</a></td>
+                        <td class="col-1"><a th:href="@{/alunos/{alunoId}/delete(alunoId = ${aluno.id})}">Deletar</a></td>
+                    </tr>
                 </tbody>
             </table>
         </div>
     </div>
     <div class="row">
-        <a href="#">Novo Aluno</a>
+        <a href="/alunos/new">Novo Aluno</a>
     </div>
 </div>
 
