@@ -1,5 +1,5 @@
-# spring-mvc
-Curso de Spring MVC do professor Xavecoding
+# Projeto
+Projeto Web de Registros escolares baseado no curso de Spring MVC do professor Xavecoding
 
 ## TODO:
 - [ ] Consertar bugs:
