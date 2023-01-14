@@ -7,6 +7,8 @@ import java.util.Set;
 
 @Entity
 public class Professor {
+
+    // Atributos
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -15,9 +17,11 @@ public class Professor {
     private BigDecimal salario;
     @Enumerated(EnumType.STRING)    // Explicita que é um Enum e trata as constantes como String
     private StatusProfessor statusProfessor;
-
     @OneToMany(mappedBy = "professor", fetch = FetchType.EAGER)
     private Set<Disciplina> disciplinas;
+
+
+    // Métodos especiais
 
     @Deprecated
     public Professor() { }
@@ -60,14 +64,6 @@ public class Professor {
         this.statusProfessor = statusProfessor;
     }
 
-
-    @PreRemove
-    public void atualizaDisciplinaOnRemove() {
-        for (Disciplina disciplina : this.getDisciplinas()) {
-            disciplina.setProfessor(null);
-        }
-    }
-
     public Set<Disciplina> getDisciplinas() {
         return disciplinas;
     }
@@ -75,4 +71,14 @@ public class Professor {
     public void setDisciplinas(Set<Disciplina> disciplinas) {
         this.disciplinas = disciplinas;
     }
+
+
+    // Função de pré-remoção para tratar o campo de professor nas disciplinas
+    @PreRemove
+    public void atualizaDisciplinaOnRemove() {
+        for (Disciplina disciplina : this.getDisciplinas()) {
+            disciplina.setProfessor(null);
+        }
+    }
+
 }

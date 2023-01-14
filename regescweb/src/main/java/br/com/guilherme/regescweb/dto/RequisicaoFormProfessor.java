@@ -9,7 +9,9 @@ import jakarta.validation.constraints.NotNull;
 import java.math.BigDecimal;
 
 // Classe DTO (Data Transfer Object) --> garante que não terá inserções "maliciosas"
-public class RequisicaoFormProfessor {      // É quem precisa ser validada, pois é essa classe que está recebendo o formulário
+public class RequisicaoFormProfessor {      // É quem precisa ser validado, visto que esta classe que recebe o formulário
+
+    // Atributos
     @NotBlank   // Não pode ser nula e o tamanho (sem os espaços do começo e fim) deve ser maior ou igual a 0
     @NotNull    // Pode ser vazia (empty), mas não pode ser nula
     private String nome;
@@ -17,6 +19,9 @@ public class RequisicaoFormProfessor {      // É quem precisa ser validada, poi
     @DecimalMin("0")
     private BigDecimal salario;
     private StatusProfessor statusProfessor;
+
+
+    // Métodos especiais
 
     public String getNome() {
         return nome;
@@ -42,14 +47,16 @@ public class RequisicaoFormProfessor {      // É quem precisa ser validada, poi
         this.salario = salario;
     }
 
-    // Função para converter a classe DTO para Entidade
+
+    // Converte a classe DTO para a entidade Professor
     public Professor toProfessor() {
         return new Professor(this.nome, this.salario, this.statusProfessor);
     }
 
 
-    // Função para converter a classe DTO para Entidade a partir de um professor válido
+    // Converte a classe DTO para entidade Professor a partir de um professor válido
     public Professor toProfessor(Professor professor) {
+
         professor.setNome(this.nome);
         professor.setSalario(this.salario);
         professor.setStatusProfessor(this.statusProfessor);
@@ -58,8 +65,9 @@ public class RequisicaoFormProfessor {      // É quem precisa ser validada, poi
     }
 
 
-    // Função para converter a Entidade Professor para a classe DTO
+    // Converte a ntidade Professor para a classe DTO
     public void fromProfessor(Professor professor) {
+
         this.setNome(professor.getNome());
         this.setSalario(professor.getSalario());
         this.setStatusProfessor(professor.getStatusProfessor());

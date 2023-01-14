@@ -8,6 +8,8 @@ import java.util.Set;
 
 @Entity
 public class Disciplina {
+
+    // Atributos
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -15,14 +17,14 @@ public class Disciplina {
     private String nome;
     @Column(nullable = false)
     private Integer semestre;
-
     @ManyToOne
     @JoinColumn(name = "professor_id")
     private Professor professor;
-
     @ManyToMany(mappedBy = "disciplinas", fetch = FetchType.EAGER)
     private Set<Aluno> alunos;
 
+
+    // Métodos especiais
 
     @Deprecated
     public Disciplina() {}
@@ -71,17 +73,16 @@ public class Disciplina {
     }
 
 
+    // Função de pré-remoção para "desmatricular" os alunos ao remover uma disciplina
+    // Esta função é necessária, pois o mapeamento do relacionamento entre Aluno-Disciplina está sendo feito na entidade Aluno, isto é, Disciplina é o non-owning side,
+    // logo o Hibernate não permite deletar uma disciplina diretamente
     @PreRemove
     public void removeAlunosOnDelete() {
 
         for (Aluno aluno : this.getAlunos()) {
             Set<Disciplina> alunoDisciplinas = aluno.getDisciplinas();
 
-            for (Disciplina disciplina : alunoDisciplinas) {
-                if (Objects.equals(disciplina.getId(), this.getId())) {
-                    alunoDisciplinas.remove(disciplina);
-                }
-            }
+            alunoDisciplinas.removeIf(disciplina -> Objects.equals(disciplina.getId(), this.getId()));
         }
     }
 

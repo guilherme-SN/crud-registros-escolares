@@ -21,6 +21,8 @@ public class AlunoController {
     private final AlunoRepository alunoRepository;
     private final DisciplinaRepository disciplinaRepository;
 
+
+    // Injeção de Dependência
     @Autowired
     public AlunoController(AlunoRepository alunoRepository, DisciplinaRepository disciplinaRepository) {
         this.alunoRepository = alunoRepository;
@@ -51,12 +53,15 @@ public class AlunoController {
     @PostMapping("")
     public ModelAndView create(@Valid RequisicaoFormAluno requisicao, BindingResult result) {
 
+        // Verifica se há erros nos valores enviados pelo formulário
         if (result.hasErrors()) {
             return new ModelAndView("/alunos/new");
         }
 
+        // Converte um objeto da classe DTO para a classe entidade
         Aluno aluno = requisicao.toAluno(this.disciplinaRepository);
 
+        // Faz a persistência no banco de dados
         this.alunoRepository.save(aluno);
 
         return new ModelAndView("redirect:/alunos/" + aluno.getId());
@@ -68,8 +73,11 @@ public class AlunoController {
 
         Optional<Aluno> optionalAluno = this.alunoRepository.findById(id);
 
+        // Verifica se o aluno com o id passado existe
         if (optionalAluno.isPresent()) {
             ModelAndView mv = new ModelAndView("alunos/show");
+
+            // Manda o objeto aluno para o Thymeleaf
             mv.addObject("aluno", optionalAluno.get());
 
             return mv;
@@ -84,10 +92,13 @@ public class AlunoController {
 
         Optional<Aluno> optionalAluno = this.alunoRepository.findById(id);
 
+        // Verifica se o aluno com o id passado existe
         if (optionalAluno.isPresent()) {
             Aluno aluno = optionalAluno.get();
 
             ModelAndView mv = new ModelAndView("alunos/disciplinas");
+
+            // Manda o id do aluno e suas disciplinas para o Thymeleaf
             mv.addObject("alunoId", id);
             mv.addObject("disciplinas", aluno.getDisciplinas());
 
@@ -102,10 +113,14 @@ public class AlunoController {
 
         Optional<Aluno> optionalAluno = this.alunoRepository.findById(id);
 
+        // Verifica se o aluno com o id passado existe
         if (optionalAluno.isPresent()) {
+            // Converte um objeto da entidade Aluno para a classe DTO
             requisicao.fromAluno(optionalAluno.get(), this.disciplinaRepository);
 
             ModelAndView mv = new ModelAndView("alunos/edit");
+
+            // Manda o id do aluno e as disciplinas disponíveis
             mv.addObject("alunoId", id);
             mv.addObject("disciplinas", this.disciplinaRepository.findAll());
 
@@ -119,15 +134,19 @@ public class AlunoController {
     @PatchMapping("/{id}")
     public ModelAndView update(@PathVariable Long id, RequisicaoFormAluno requisicao, BindingResult result) {
 
+        // Verifica se há erros nos valores enviados pelo formulário
         if (result.hasErrors()) {
             return new ModelAndView("/alunos/" + id + "/edit");
         }
 
         Optional<Aluno> optionalAluno = this.alunoRepository.findById(id);
 
+        // Verifica se o aluno com o id passado existe
         if (optionalAluno.isPresent()) {
+            // Atualiza os dados do aluno a partir dos dados da classe DTO recebida pelo formulário
             Aluno aluno = requisicao.toAluno(optionalAluno.get(), this.disciplinaRepository);
 
+            // Faz a persistência no banco de dados
             this.alunoRepository.save(aluno);
 
             ModelAndView mv =  new ModelAndView("alunos/show");
@@ -144,11 +163,12 @@ public class AlunoController {
     public ModelAndView delete(@PathVariable Long id) {
 
         try {
+            // Tenta deletar o objeto aluno com o id passado
             this.alunoRepository.deleteById(id);
-
-            return new ModelAndView("redirect:/alunos");
         } catch (Exception e) {
-            return new ModelAndView("redirect:/alunos");
+            System.out.println(e.getMessage());
         }
+
+        return new ModelAndView("redirect:/alunos");
     }
 }

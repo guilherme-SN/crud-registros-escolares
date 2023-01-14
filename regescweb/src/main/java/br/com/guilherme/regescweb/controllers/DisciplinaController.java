@@ -20,16 +20,21 @@ public class DisciplinaController {
     private final DisciplinaRepository disciplinaRepository;
     private final ProfessorRepository professorRepository;
 
+
+    // Injeção de Dependência
     @Autowired
     public DisciplinaController(DisciplinaRepository disciplinaRepository, ProfessorRepository professorRepository) {
         this.disciplinaRepository = disciplinaRepository;
         this.professorRepository = professorRepository;
     }
 
+
     @GetMapping("")
     public ModelAndView index() {
+
         ModelAndView mv = new ModelAndView("/disciplinas/index");
         mv.addObject("disciplinas", this.disciplinaRepository.findAll());
+
         return mv;
     }
 
@@ -38,7 +43,6 @@ public class DisciplinaController {
     public ModelAndView newDisciplina(RequisicaoFormDisciplina requisicao) {
 
         ModelAndView mv = new ModelAndView("/disciplinas/new");
-
         mv.addObject("professores", this.professorRepository.findAll());
 
         return mv;
@@ -48,16 +52,18 @@ public class DisciplinaController {
     @PostMapping("")
     public ModelAndView create(@Valid RequisicaoFormDisciplina requisicao, BindingResult result) {
 
+        // Verifica se há erros nos valores enviados pelo formulário
         if (result.hasErrors()) {
             ModelAndView mv = new ModelAndView("/disciplinas/new");
-
             mv.addObject("professores", this.professorRepository.findAll());
 
             return mv;
         }
 
+        // Converte um objeto da classe DTO para a classe entidade
         Disciplina disciplina = requisicao.toDisciplina(this.professorRepository);
 
+        // Faz a persistência no banco de dados
         this.disciplinaRepository.save(disciplina);
 
         return this.retornaSucessoDisciplina("Disciplina criada com sucesso!");
@@ -67,20 +73,19 @@ public class DisciplinaController {
     @GetMapping("/{id}")
     public ModelAndView showDisciplinas(@PathVariable Long id) {
 
-        ModelAndView mv = new ModelAndView();
         Optional<Disciplina> optionalDisciplina = this.disciplinaRepository.findById(id);
 
+        // Verifica se a disciplina com o id passado existe
         if (optionalDisciplina.isPresent()) {
-            Disciplina disciplina = optionalDisciplina.get();
+            ModelAndView mv = new ModelAndView("/disciplinas/show");
 
-            mv.setViewName("/disciplinas/show");
-            mv.addObject("disciplinaId", id);
-            mv.addObject("disciplina", disciplina);
-        } else {
-            mv.setViewName("redirect:/disciplinas");
+            // Recupera e manda a disciplina para o Thymeleaf
+            mv.addObject("disciplina", optionalDisciplina.get());
+
+            return mv;
         }
 
-        return mv;
+        return new ModelAndView("redirect:/disciplinas");
     }
 
 
@@ -89,8 +94,11 @@ public class DisciplinaController {
 
         Optional<Disciplina> disciplinaOptional = this.disciplinaRepository.findById(id);
 
+        // Verifica se a disciplina com o id passado existe
         if (disciplinaOptional.isPresent()) {
             ModelAndView mv = new ModelAndView("disciplinas/alunos");
+
+            // Recupera e manda os alunos matriculados na disciplina
             mv.addObject("alunos", disciplinaOptional.get().getAlunos());
             mv.addObject("disciplinaId", id);
 
@@ -104,31 +112,34 @@ public class DisciplinaController {
     @GetMapping("/{id}/edit")
     public ModelAndView edit(@PathVariable Long id, RequisicaoFormDisciplina requisicao) {
 
-        ModelAndView mv = new ModelAndView();
         Optional<Disciplina> optionalDisciplina = this.disciplinaRepository.findById(id);
 
+        // Verifica se a disciplina com o id passado existe
         if (optionalDisciplina.isPresent()) {
-            Disciplina disciplina = optionalDisciplina.get();
+            ModelAndView mv = new ModelAndView("/disciplinas/edit");
 
-            requisicao.fromDisciplina(disciplina);
+            // Converte um objeto da entidade Disciplina para a classe DTO
+            requisicao.fromDisciplina(optionalDisciplina.get());
 
-            mv.setViewName("/disciplinas/edit");
+            // Manda o id da disciplina e os professores disponíveis
             mv.addObject("disciplinaId", id);
             mv.addObject("professores", this.professorRepository.findAll());
-        } else {
-            mv.setViewName("redirect:/disciplinas");
+
+            return mv;
         }
 
-        return mv;
+        return new ModelAndView("redirect:/disciplinas");
     }
 
 
     @PatchMapping("/{id}")
     public ModelAndView update(@PathVariable Long id, @Valid RequisicaoFormDisciplina requisicao, BindingResult result) {
 
+        // Verifica se há erros nos valores passados pelo formulário
         if (result.hasErrors()) {
             ModelAndView mv = new ModelAndView("/disciplinas/edit");
 
+            // Manda o id da disciplina e os professores disponíveis
             mv.addObject("disciplinaId", id);
             mv.addObject("professores", this.professorRepository.findAll());
 
@@ -137,9 +148,12 @@ public class DisciplinaController {
 
         Optional<Disciplina> optionalDisciplina = this.disciplinaRepository.findById(id);
 
+        // Verifica se a disciplina com o id passado existe
         if (optionalDisciplina.isPresent()) {
+            // Converte um objeto da classe DTO para a entidade Disciplina a partir de uma disciplina válida
             Disciplina disciplina = requisicao.toDisciplina(optionalDisciplina.get(), this.professorRepository);
 
+            // Faz a persistência no banco de dados
             this.disciplinaRepository.save(disciplina);
 
             return this.retornaSucessoDisciplina("Disciplina #" + id + " atualizada com sucesso!", id);
@@ -152,38 +166,26 @@ public class DisciplinaController {
     @GetMapping("/{id}/delete")
     public ModelAndView delete(@PathVariable Long id) {
 
-        ModelAndView mv = new ModelAndView();
-
         try {
+            // Tenta deletar a disciplina com o id passado
             this.disciplinaRepository.deleteById(id);
 
-            mv = this.retornaSucessoDisciplina("Disciplina #" + id + " deletada com sucesso!");
+            return this.retornaSucessoDisciplina("Disciplina #" + id + " deletada com sucesso!");
         } catch (Exception e) {
             System.out.println(e.getMessage());
 
-            mv = this.retornaErroDisciplina(id);
+            return this.retornaErroDisciplina(id);
         }
-
-        return mv;
     }
 
+
+    // Funções para setar os parâmetros de erro ou sucesso ao realizar uma operação
 
     private ModelAndView retornaErroDisciplina(Long id) {
 
         ModelAndView mv = new ModelAndView("redirect:/disciplinas");
 
         mv.addObject("message", "Disciplina #" + id + " não encontrada!");
-        mv.addObject("error", true);
-
-        return mv;
-    }
-
-
-    private ModelAndView retornaErroDisciplina(String msg) {
-
-        ModelAndView mv = new ModelAndView("redirect:/disciplinas");
-
-        mv.addObject("message", msg);
         mv.addObject("error", true);
 
         return mv;

@@ -12,16 +12,18 @@ import java.util.Optional;
 
 // Classe DTO
 public class RequisicaoFormDisciplina {
+
+    // Atributos
     @NotNull
     @NotBlank
     private String nome;
     @NotNull
     @Min(1)
     private Integer semestre;
-
-
     private Long professorId;
 
+
+    // Métodos especiais
 
     public String getNome() {
         return nome;
@@ -48,37 +50,39 @@ public class RequisicaoFormDisciplina {
     }
 
 
-    public Professor toProfessor(Long professorId, ProfessorRepository professorRepository) {
+    // Converte um objeto da classe DTO para a entidade Professor
+    public Professor toProfessor(ProfessorRepository professorRepository) {
         Optional<Professor> optionalProfessor = professorRepository.findById(this.professorId);
 
-        if (optionalProfessor.isPresent()) {
-            return optionalProfessor.get();
-        }
-
-        return null;
+        return optionalProfessor.orElse(null);
     }
 
+
+    // Converte um objeto da classe DTO para a entidade Disciplina
     public Disciplina toDisciplina(ProfessorRepository professorRepository) {
 
         Optional<Professor> optionalProfessor = professorRepository.findById(this.professorId);
 
         if (optionalProfessor.isPresent()) {
-            return new Disciplina(this.nome, this.semestre, this.toProfessor(this.professorId, professorRepository));
+            return new Disciplina(this.nome, this.semestre, this.toProfessor(professorRepository));
         }
 
         return null;
     }
 
 
+    // Converte um objeto da classe DTO para a entidade Disciplina a partir de uma disciplina válida
     public Disciplina toDisciplina(Disciplina disciplina, ProfessorRepository professorRepository) {
+
         disciplina.setNome(this.nome);
         disciplina.setSemestre(this.semestre);
-        disciplina.setProfessor(this.toProfessor(this.professorId, professorRepository));
+        disciplina.setProfessor(this.toProfessor(professorRepository));
 
         return disciplina;
     }
 
 
+    // Converte um objeto da entidade Disciplina para a classe DTO
     public void fromDisciplina(Disciplina disciplina) {
         this.setNome(disciplina.getNome());
         this.setSemestre(disciplina.getSemestre());

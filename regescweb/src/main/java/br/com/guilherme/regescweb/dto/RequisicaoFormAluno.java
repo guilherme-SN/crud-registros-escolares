@@ -12,15 +12,18 @@ import java.util.Optional;
 import java.util.Set;
 
 public class RequisicaoFormAluno {
+
+    // Atributos
     @NotNull
     @NotBlank
     private String nome;
     @NotNull
     @Min(1)
     private Integer idade;
-
     private Set<Long> disciplinasId;
 
+
+    // Métodos especiais
 
     public String getNome() {
         return nome;
@@ -47,22 +50,22 @@ public class RequisicaoFormAluno {
     }
 
 
-    public Set<Disciplina> recuperaDisciplinas(DisciplinaRepository disciplinaRepository, Set<Long> disciplinasId) {
+    // Recupera as disciplinas a partir dos IDs
+    public Set<Disciplina> recuperaDisciplinas(DisciplinaRepository disciplinaRepository) {
 
         Set<Disciplina> disciplinas = new HashSet<Disciplina>();
 
         for (Long disciplinaId : this.disciplinasId) {
             Optional<Disciplina> optionalDisciplina = disciplinaRepository.findById(disciplinaId);
 
-            if (optionalDisciplina.isPresent()) {
-                disciplinas.add(optionalDisciplina.get());
-            }
+            optionalDisciplina.ifPresent(disciplinas::add);
         }
 
         return disciplinas;
     }
 
 
+    // Recupera os IDs das disciplinas a partir das disciplinas
     public Set<Long> recuperaIdDisciplinas(DisciplinaRepository disciplinaRepository, Set<Disciplina> disciplinas) {
 
         Set<Long> disciplinasId = new HashSet<Long>();
@@ -74,23 +77,31 @@ public class RequisicaoFormAluno {
         return disciplinasId;
     }
 
+
+    // Converte um objeto da classe DTO para a entidade Aluno
     public Aluno toAluno(DisciplinaRepository disciplinaRepository) {
-        return new Aluno(this.nome, this.idade, this.recuperaDisciplinas(disciplinaRepository, this.getDisciplinasId()));
+        return new Aluno(this.nome, this.idade, this.recuperaDisciplinas(disciplinaRepository));
     }
 
+
+    // Converte um objeto da classe DTO para a entidade Aluno a partir de um aluno válido
     public Aluno toAluno(Aluno aluno, DisciplinaRepository disciplinaRepository) {
+
         aluno.setNome(this.nome);
         aluno.setIdade(this.idade);
-        aluno.setDisciplinas(this.recuperaDisciplinas(disciplinaRepository, this.getDisciplinasId()));
+        aluno.setDisciplinas(this.recuperaDisciplinas(disciplinaRepository));
 
         return aluno;
     }
 
+
+    // Converte um objeto da entidade Aluno para a classe DTO
     public void fromAluno(Aluno aluno, DisciplinaRepository disciplinaRepository) {
         this.setNome(aluno.getNome());
         this.setIdade(aluno.getIdade());
         this.setDisciplinasId(this.recuperaIdDisciplinas(disciplinaRepository, aluno.getDisciplinas()));
     }
+
 
     @Override
     public String toString() {

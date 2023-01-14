@@ -8,6 +8,8 @@ import java.util.Set;
 
 @Entity
 public class Aluno {
+
+    // Atributos
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -22,6 +24,9 @@ public class Aluno {
             inverseJoinColumns = @JoinColumn(name = "disciplina_fk")
     )
     private Set<Disciplina> disciplinas;
+
+
+    // Métodos especiais
 
     @Deprecated
     public Aluno() {}
