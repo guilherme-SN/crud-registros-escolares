@@ -53,6 +53,10 @@ public class RequisicaoFormAluno {
     // Recupera as disciplinas a partir dos IDs
     public Set<Disciplina> recuperaDisciplinas(DisciplinaRepository disciplinaRepository) {
 
+        if (this.disciplinasId == null) {
+            return null;
+        }
+
         Set<Disciplina> disciplinas = new HashSet<Disciplina>();
 
         for (Long disciplinaId : this.disciplinasId) {
