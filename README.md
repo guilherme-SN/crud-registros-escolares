@@ -1,16 +1,5 @@
 # Projeto
-Projeto Web de Registros escolares baseado no curso de Spring MVC do professor Xavecoding
+Projeto Web de Registros Escolares baseado no curso de Spring MVC do professor Xavecoding
 
-## TODO:
-- [ ] Consertar bugs:
-	- Permitir que apenas professores disponíveis (não demitidos) possam pegar matérias
-- [ ] Otimizar o relacionamento entre as entidades
-	- Fazer com que o nome de cada objeto seja um link para seus detalhes
-	- Tratar quando queremos deletar um professor, mas deixar a disciplina
-- [ ] Melhorar o front-end
-	- Fazer um modal para mostrar/escolher as disciplinas do aluno
-	- Melhorar os links (botões)
-- [ ] Paginação
-- [ ] Comentar/refatorar código
-	- Arrumar a função toDisciplina() para que ela não tenha que receber o repositório de professor
-	- Fazer um modal de confirmação para a deleção de um objeto
+## Sobre
+CRUD de Registros Escolares usando o framework Spring (Spring Boot, Spring Data, Spring MVC)
