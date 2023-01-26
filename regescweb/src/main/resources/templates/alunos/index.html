@@ -35,10 +35,36 @@
                         <th class="col-1" scope="row" th:text="${aluno.id}">ID</th>
                         <td class="col-4" th:text="${aluno.nome}">NOME</td>
                         <td class="col-2" th:text="${aluno.idade}">IDADE</td>
-                        <td class="col-2"><a th:href="@{/alunos/{alunoId}/disciplinas(alunoId = ${aluno.id})}">Disciplinas</a></td>
+
+                        <!-- Button trigger modal -->
+                        <td><button type="button" class="btn btn-primary" data-bs-toggle="modal" th:attr="data-bs-target=${'#disciplinaModal' + aluno.id}">Disciplinas</button></td>
+
                         <td class="col-1"><a th:href="@{/alunos/{alunoId}(alunoId = ${aluno.id})}">Detalhes</a></td>
                         <td class="col-1"><a th:href="@{/alunos/{alunoId}/edit(alunoId = ${aluno.id})}">Editar</a></td>
                         <td class="col-1"><a th:href="@{/alunos/{alunoId}/delete(alunoId = ${aluno.id})}">Deletar</a></td>
+
+                        <!-- Modal -->
+                        <div class="modal fade" tabindex="-1" th:attr="id=${'disciplinaModal' + aluno.id},
+                             aria-labelledby=${'disciplinaModalLabel' + aluno.id}" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h1 class="modal-title fs-5" th:attr="id=${'disciplinaModalLabel' + aluno.id}"
+                                            th:text="${'Disciplinas do aluno #' + aluno.id}">Modal title</h1>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div>
+                                            <h2 th:each="disciplina : ${aluno.disciplinas}"
+                                                th:text="${disciplina != null} ? ${disciplina.nome} : ''"></h2>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </tr>
                 </tbody>
             </table>

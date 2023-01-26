@@ -38,10 +38,36 @@
                         <td class="col-4" th:text="${disciplina.nome}">NOME</td>
                         <td class="col-2" th:text="${disciplina.semestre}">SEMESTRE</td>
                         <td class="col-2" th:text="${disciplina.professor != null} ? ${disciplina.professor.nome} : 'Sem professor'">PROFESSOR</td>
-                        <td class="col-2"><a th:href="@{/disciplinas/{disciplinaId}/alunos(disciplinaId = ${disciplina.id})}">Alunos</a></td>
+
+                        <!-- Button trigger modal -->
+                        <td><button type="button" class="btn btn-primary" data-bs-toggle="modal" th:attr="data-bs-target=${'#alunoModal' + disciplina.id}">Disciplinas</button></td>
+
                         <td class="col-1"><a th:href="@{/disciplinas/{disciplinaId}(disciplinaId = ${disciplina.id})}">Detalhes</a></td>
                         <td class="col-1"><a th:href="@{/disciplinas/{disciplinaId}/edit(disciplinaId = ${disciplina.id})}">Editar</a></td>
                         <td class="col-1"><a th:href="@{/disciplinas/{disciplinaId}/delete(disciplinaId = ${disciplina.id})}">Deletar</a></td>
+
+                        <!-- Modal -->
+                        <div class="modal fade" tabindex="-1" th:attr="id=${'alunoModal' + disciplina.id},
+                             aria-labelledby=${'alunoModalLabel' + disciplina.id}" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        <h1 class="modal-title fs-5" th:attr="id=${'alunoModalLabel' + disciplina.id}"
+                                            th:text="${'Alunos da disciplina #' + disciplina.id}">Modal title</h1>
+                                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                    </div>
+                                    <div class="modal-body">
+                                        <div>
+                                            <h2 th:each="aluno : ${disciplina.alunos}"
+                                                th:text="${aluno != null} ? ${aluno.nome} : ''"></h2>
+                                        </div>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Fechar</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                     </tr>
                 </tbody>
             </table>
