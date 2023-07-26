@@ -40,7 +40,7 @@ public class AlunoController {
     }
 
 
-    @GetMapping("new")
+    @GetMapping("/new")
     public ModelAndView newAluno(RequisicaoFormAluno requisicao) {
 
         ModelAndView mv = new ModelAndView("alunos/new.html");

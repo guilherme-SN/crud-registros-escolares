@@ -6,6 +6,6 @@
 <body>
     <header th:replace="~{fragmentos :: header('Editar Disciplina #' + ${disciplinaId})}"></header>
 
-    <div th:replace="~{/disciplinas/disciplinafragmentos :: form(requisicaoFormDisciplina, '/disciplinas/' + ${disciplinaId}, 'PATCH')}"></div>
+    <div th:replace="~{disciplinas/disciplinafragmentos :: form(requisicaoFormDisciplina, '/disciplinas/' + ${disciplinaId}, 'PATCH')}"></div>
 </body>
 </html>

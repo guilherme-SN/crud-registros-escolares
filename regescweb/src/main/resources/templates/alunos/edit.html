@@ -8,7 +8,7 @@
 <header th:replace="~{fragmentos :: header('Editar Aluno #' + ${alunoId})}"></header>
 
 <main>
-    <div th:replace="~{/alunos/fragmentos :: form(requisicaoFormAluno, '/alunos/' + ${alunoId}, 'PATCH')}"></div>
+    <div th:replace="~{alunos/fragmentos :: form(requisicaoFormAluno, '/alunos/' + ${alunoId}, 'PATCH')}"></div>
 </main>
 
 </body>
