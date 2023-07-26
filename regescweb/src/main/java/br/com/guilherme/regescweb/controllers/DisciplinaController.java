@@ -32,7 +32,7 @@ public class DisciplinaController {
     @GetMapping("")
     public ModelAndView index() {
 
-        ModelAndView mv = new ModelAndView("disciplinas/index");
+        ModelAndView mv = new ModelAndView("disciplinas/index.html");
         mv.addObject("disciplinas", this.disciplinaRepository.findAll());
 
         return mv;
@@ -42,7 +42,7 @@ public class DisciplinaController {
     @GetMapping("/new")
     public ModelAndView newDisciplina(RequisicaoFormDisciplina requisicao) {
 
-        ModelAndView mv = new ModelAndView("/disciplinas/new");
+        ModelAndView mv = new ModelAndView("disciplinas/new.html");
         mv.addObject("professores", this.professorRepository.findAll());
 
         return mv;
@@ -54,7 +54,7 @@ public class DisciplinaController {
 
         // Verifica se há erros nos valores enviados pelo formulário
         if (result.hasErrors()) {
-            ModelAndView mv = new ModelAndView("/disciplinas/new");
+            ModelAndView mv = new ModelAndView("disciplinas/new.html");
             mv.addObject("professores", this.professorRepository.findAll());
 
             return mv;
@@ -77,7 +77,7 @@ public class DisciplinaController {
 
         // Verifica se a disciplina com o id passado existe
         if (optionalDisciplina.isPresent()) {
-            ModelAndView mv = new ModelAndView("/disciplinas/show");
+            ModelAndView mv = new ModelAndView("disciplinas/show.html");
 
             // Recupera e manda a disciplina para o Thymeleaf
             mv.addObject("disciplina", optionalDisciplina.get());
@@ -96,7 +96,7 @@ public class DisciplinaController {
 
         // Verifica se a disciplina com o id passado existe
         if (disciplinaOptional.isPresent()) {
-            ModelAndView mv = new ModelAndView("disciplinas/alunos");
+            ModelAndView mv = new ModelAndView("disciplinas/alunos.html");
 
             // Recupera e manda os alunos matriculados na disciplina
             mv.addObject("alunos", disciplinaOptional.get().getAlunos());
@@ -116,7 +116,7 @@ public class DisciplinaController {
 
         // Verifica se a disciplina com o id passado existe
         if (optionalDisciplina.isPresent()) {
-            ModelAndView mv = new ModelAndView("/disciplinas/edit");
+            ModelAndView mv = new ModelAndView("disciplinas/edit.html");
 
             // Converte um objeto da entidade Disciplina para a classe DTO
             requisicao.fromDisciplina(optionalDisciplina.get());
@@ -137,7 +137,7 @@ public class DisciplinaController {
 
         // Verifica se há erros nos valores passados pelo formulário
         if (result.hasErrors()) {
-            ModelAndView mv = new ModelAndView("/disciplinas/edit");
+            ModelAndView mv = new ModelAndView("disciplinas/edit.html");
 
             // Manda o id da disciplina e os professores disponíveis
             mv.addObject("disciplinaId", id);

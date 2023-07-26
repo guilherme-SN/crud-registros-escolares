@@ -33,7 +33,7 @@ public class AlunoController {
     @GetMapping("")
     public ModelAndView index() {
 
-        ModelAndView mv = new ModelAndView("alunos/index");
+        ModelAndView mv = new ModelAndView("alunos/index.html");
         mv.addObject("alunos", this.alunoRepository.findAll());
 
         return mv;

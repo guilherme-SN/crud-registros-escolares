@@ -10,6 +10,6 @@ public class HomeController {
     @GetMapping("/")
     public String home() {
 
-        return "home";      // renderiza o arquivo templates/home.html
+        return "home.html";      // renderiza o arquivo templates/home.html
     }
 }

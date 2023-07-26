@@ -29,7 +29,7 @@ public class ProfessorController {
     @GetMapping("")
     public ModelAndView index() {
 
-        ModelAndView mv = new ModelAndView("professores/index");
+        ModelAndView mv = new ModelAndView("professores/index.html");
         mv.addObject("professores", this.professorRepository.findAll());
 
         return mv;
@@ -39,7 +39,7 @@ public class ProfessorController {
     @GetMapping("/new")
     public ModelAndView newProfessor(RequisicaoFormProfessor requisicao) {      // Esse parâmetro é necessário para explicitar que essa action está atrelada ao formulário
 
-        ModelAndView mv = new ModelAndView("/professores/new");
+        ModelAndView mv = new ModelAndView("professores/new.html");
         mv.addObject("statusProfessor", StatusProfessor.values());
 
         return mv;
@@ -54,7 +54,7 @@ public class ProfessorController {
 
         // Verificamos a validação
         if (bindingResult.hasErrors()) {
-            ModelAndView mv = new ModelAndView("/professores/new");
+            ModelAndView mv = new ModelAndView("professores/new.html");
             mv.addObject("statusProfessor", StatusProfessor.values());
 
             return mv;
@@ -81,7 +81,7 @@ public class ProfessorController {
             // Recupera o professor
             Professor professor = optionalProfessor.get();
 
-            ModelAndView mv = new ModelAndView("professores/show");
+            ModelAndView mv = new ModelAndView("professores/show.html");
 
             // Passa um objeto da entidade Professor para a view professores/show.html
             mv.addObject("professor", professor);
@@ -108,7 +108,7 @@ public class ProfessorController {
             // Converte a entidade Professor para a classe DTO
             requisicao.fromProfessor(professor);
 
-            ModelAndView mv = new ModelAndView("professores/edit");
+            ModelAndView mv = new ModelAndView("professores/edit.html");
 
             // Passa os valores de status possíveis para o Thymeleaf
             mv.addObject("statusProfessor", StatusProfessor.values());
@@ -126,7 +126,7 @@ public class ProfessorController {
 
         // Verifica se há erros nos dados passados pelo formulário
         if (bindingResult.hasErrors()) {
-            ModelAndView mv = new ModelAndView("professores/edit");
+            ModelAndView mv = new ModelAndView("professores/edit.html");
 
             mv.addObject("statusProfessor", StatusProfessor.values());
             mv.addObject("professorId", id);
