@@ -6,13 +6,14 @@ import br.com.guilherme.regescweb.repositories.DisciplinaRepository;
 import br.com.guilherme.regescweb.repositories.ProfessorRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.ModelAndView;
 
 import java.util.Optional;
 
-@RestController
+@Controller
 @RequestMapping(value = "/disciplinas")
 public class DisciplinaController {
 
