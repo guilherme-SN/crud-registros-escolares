@@ -43,7 +43,7 @@ public class AlunoController {
     @GetMapping("/new")
     public ModelAndView newAluno(RequisicaoFormAluno requisicao) {
 
-        ModelAndView mv = new ModelAndView("alunos/new");
+        ModelAndView mv = new ModelAndView("alunos/new.html");
         mv.addObject("disciplinas", this.disciplinaRepository.findAll());
 
         return mv;
@@ -55,7 +55,7 @@ public class AlunoController {
 
         // Verifica se há erros nos valores enviados pelo formulário
         if (result.hasErrors()) {
-            return new ModelAndView("/alunos/new");
+            return new ModelAndView("alunos/new.html");
         }
 
         // Converte um objeto da classe DTO para a classe entidade
@@ -75,7 +75,7 @@ public class AlunoController {
 
         // Verifica se o aluno com o id passado existe
         if (optionalAluno.isPresent()) {
-            ModelAndView mv = new ModelAndView("alunos/show");
+            ModelAndView mv = new ModelAndView("alunos/show.html");
 
             // Manda o objeto aluno para o Thymeleaf
             mv.addObject("aluno", optionalAluno.get());
@@ -96,7 +96,7 @@ public class AlunoController {
         if (optionalAluno.isPresent()) {
             Aluno aluno = optionalAluno.get();
 
-            ModelAndView mv = new ModelAndView("alunos/disciplinas");
+            ModelAndView mv = new ModelAndView("alunos/disciplinas.html");
 
             // Manda o id do aluno e suas disciplinas para o Thymeleaf
             mv.addObject("alunoId", id);
@@ -118,7 +118,7 @@ public class AlunoController {
             // Converte um objeto da entidade Aluno para a classe DTO
             requisicao.fromAluno(optionalAluno.get(), this.disciplinaRepository);
 
-            ModelAndView mv = new ModelAndView("alunos/edit");
+            ModelAndView mv = new ModelAndView("alunos/edit.html");
 
             // Manda o id do aluno e as disciplinas disponíveis
             mv.addObject("alunoId", id);
@@ -149,7 +149,7 @@ public class AlunoController {
             // Faz a persistência no banco de dados
             this.alunoRepository.save(aluno);
 
-            ModelAndView mv =  new ModelAndView("alunos/show");
+            ModelAndView mv =  new ModelAndView("alunos/show.html");
             mv.addObject("aluno", aluno);
 
             return mv;
