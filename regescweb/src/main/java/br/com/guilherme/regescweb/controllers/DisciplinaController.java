@@ -14,7 +14,7 @@ import org.springframework.web.servlet.ModelAndView;
 import java.util.Optional;
 
 @Controller
-@RequestMapping("/disciplinas")
+@RequestMapping(value = "/disciplinas")
 public class DisciplinaController {
 
     private final DisciplinaRepository disciplinaRepository;
