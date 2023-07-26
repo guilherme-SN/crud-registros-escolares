@@ -32,7 +32,7 @@ public class DisciplinaController {
     @GetMapping("")
     public ModelAndView index() {
 
-        ModelAndView mv = new ModelAndView("/disciplinas/index");
+        ModelAndView mv = new ModelAndView("disciplinas/index");
         mv.addObject("disciplinas", this.disciplinaRepository.findAll());
 
         return mv;
