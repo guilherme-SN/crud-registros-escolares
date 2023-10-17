@@ -11,7 +11,7 @@
         <div class="row">
             <div class="col-12">
                 <b>Nome: </b> <span th:text="${aluno.nome}"></span><br/>
-                <b>Semestre: </b> <span th:text="${aluno.idade}"></span><br/>
+                <b>Idade: </b> <span th:text="${aluno.idade}"></span><br/>
                 <b>Disciplinas: </b> |<span th:each="disciplina : ${aluno.disciplinas}"
                                            th:text="${disciplina.nome} + '| '"></span><br/>
             </div>
