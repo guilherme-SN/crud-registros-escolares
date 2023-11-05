@@ -40,7 +40,7 @@
                         <td class="col-2" th:text="${disciplina.professor != null} ? ${disciplina.professor.nome} : 'Sem professor'">PROFESSOR</td>
 
                         <!-- Button trigger modal -->
-                        <td><button type="button" class="btn btn-primary" data-bs-toggle="modal" th:attr="data-bs-target=${'#alunoModal' + disciplina.id}">Disciplinas</button></td>
+                        <td><button type="button" class="btn btn-primary" data-bs-toggle="modal" th:attr="data-bs-target=${'#alunoModal' + disciplina.id}">Alunos</button></td>
 
                         <td class="col-1"><a th:href="@{/disciplinas/{disciplinaId}(disciplinaId = ${disciplina.id})}">Detalhes</a></td>
                         <td class="col-1"><a th:href="@{/disciplinas/{disciplinaId}/edit(disciplinaId = ${disciplina.id})}">Editar</a></td>
