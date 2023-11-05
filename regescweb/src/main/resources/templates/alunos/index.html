@@ -37,7 +37,7 @@
                         <td class="col-2" th:text="${aluno.idade}">IDADE</td>
 
                         <!-- Button trigger modal -->
-                        <td><button type="button" class="btn btn-primary" data-bs-toggle="modal" th:attr="data-bs-target=${'#disciplinaModal' + aluno.id}">Disciplinas</button></td>
+                        <td><button type="button" class="btn btn-primary" data-bs-toggle="modal" th:attr="data-bs-target=${'#disciplinaModal' + aluno.id}">Alunos</button></td>
 
                         <td class="col-1"><a th:href="@{/alunos/{alunoId}(alunoId = ${aluno.id})}">Detalhes</a></td>
                         <td class="col-1"><a th:href="@{/alunos/{alunoId}/edit(alunoId = ${aluno.id})}">Editar</a></td>
